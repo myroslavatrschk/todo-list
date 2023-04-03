@@ -1,5 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>TODO list</h1>
+  <body>
+    <h1>TODO list <a class="btn btn-primary float" href="{% url 'todoapp:task-create' %}">Add task</a></h1>
+
+    {% for task in tasks %}
+      <h3>{{ task.content }} {% if task.completed %}
+        <strong style="color:green">Done</strong>
+          <a class="btn btn-secondary float" href="{% url 'todoapp:task-status' pk=task.id %}">Undo</a>
+      {% else %}
+        <strong style="color:red">Not done</strong>
+          <a class="btn btn-success float" href="{% url 'todoapp:task-status' pk=task.id %}">Complete</a>
+      {% endif %} </h3>
+      Created: {{ task.created }}
+      <span style="color: darkred">{% if task.deadline %}Deadline: {{ task.deadline }}{% endif %}</span>
+      <br>
+      <span style="color: dimgray">
+      Tags: {% for tag in task.tags.all %}
+        {{ tag }}
+      </span>
+      {% endfor %}
+      <a href="{% url 'todoapp:task-update' pk=task.id %}">Update</a>
+      <a href="{% url 'todoapp:task-delete' pk=task.id %}">Delete</a>
+    {% endfor %}
+    <hr>
+  </body>
 {% endblock %}
